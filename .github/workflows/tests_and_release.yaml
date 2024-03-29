@@ -54,13 +54,13 @@ jobs:
 
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        if: ${{ steps.release.outputs.released }} == 'true'
+        if: steps.release.outputs.released == 'true'
         with:
           password: ${{secrets.PYPI_TOKEN}}
 
       - name: Publish package to GitHub Release
         uses: python-semantic-release/upload-to-gh-release@main
-        if: ${{ steps.release.outputs.released }} == 'true'
+        if: $steps.release.outputs.released == 'true'
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           tag: ${{ steps.release.outputs.tag }}
