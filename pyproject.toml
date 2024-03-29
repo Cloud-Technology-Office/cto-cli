@@ -30,12 +30,7 @@ cto = "cto_cli.main:main"
 version_toml = ["pyproject.toml:tool.poetry.version"] # version location
 branch = "main"                             # branch to make releases of
 changelog_file = "CHANGELOG.md"             # changelog file
-
-build_command = """
-    python -m pip install "poetry==1.8.2"
-    poetry build
-"""
-
+build_command = "true"
 dist_path = "dist/"                         # where to put dists
 upload_to_release = true                    # auto-create GitHub release
 remove_dist = false                         # don't remove dists
