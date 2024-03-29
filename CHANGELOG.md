@@ -2,7 +2,11 @@
 
 
 
-## v0.1.0 (2024-03-28)
+## v0.1.0 (2024-03-29)
+
+### Build
+
+* build: enable pypi builds ([`af1b68a`](https://github.com/Cloud-Technology-Office/cto-cli/commit/af1b68a07a094966ec137ef7118182265be4854b))
 
 ### Feature
 
