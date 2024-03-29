@@ -32,7 +32,7 @@ branch = "main"                             # branch to make releases of
 changelog_file = "CHANGELOG.md"             # changelog file
 
 build_command = """
-    python -m pip install "poetry=1.8.2"
+    python -m pip install "poetry==1.8.2"
     poetry build
 """
 
