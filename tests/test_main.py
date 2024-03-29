@@ -1,5 +1,6 @@
 from typer.testing import CliRunner
 from importlib.metadata import version as metadata_version
+
 runner = CliRunner()
 
 
