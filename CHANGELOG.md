@@ -4,6 +4,10 @@
 
 ## v0.1.1 (2024-03-29)
 
+### Build
+
+* build: enable pypi builds (#14) ([`c065655`](https://github.com/Cloud-Technology-Office/cto-cli/commit/c06565545a329d06ea5e4fbceb1627af78782f1c))
+
 ### Fix
 
 * fix: formatting in tests ([`bbebe6e`](https://github.com/Cloud-Technology-Office/cto-cli/commit/bbebe6ecc83e7df3256120b7bbb1ad23695f122a))
