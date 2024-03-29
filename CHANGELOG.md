@@ -2,6 +2,13 @@
 
 
 
+## v0.1.1 (2024-03-29)
+
+### Fix
+
+* fix: formatting in tests ([`bbebe6e`](https://github.com/Cloud-Technology-Office/cto-cli/commit/bbebe6ecc83e7df3256120b7bbb1ad23695f122a))
+
+
 ## v0.1.0 (2024-03-29)
 
 ### Build
