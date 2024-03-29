@@ -45,12 +45,21 @@ jobs:
           pip install poetry
           poetry install --without dev
 
-      - name: Release to GH
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          PyPI_TOKEN: ${{secrets.PYPI_TOKEN}}
-        run: |
-          pip install "python-semantic-release==9.3.1"
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          semantic-release version && semantic-release publish
+      - name: Python Semantic Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v9
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        if: ${{ steps.release.outputs.released }} == 'true'
+        with:
+          password: ${{secrets.PYPI_TOKEN}}
+
+      - name: Publish package to GitHub Release
+        uses: python-semantic-release/upload-to-gh-release@main
+        if: ${{ steps.release.outputs.released }} == 'true'
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
