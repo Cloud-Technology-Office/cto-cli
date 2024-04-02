@@ -1,4 +1,9 @@
-from typing import Annotated
+import sys
+
+if sys.version_info < (3, 11):
+    from typing_extensions import Annotated
+else:
+    from typing import Annotated
 import typer
 from rich import print
 

@@ -1,5 +1,11 @@
+import sys
 from enum import Enum
-from typing import Annotated
+
+if sys.version_info < (3, 11):
+    from typing_extensions import Annotated
+else:
+    from typing import Annotated
+
 
 import typer
 from rich.prompt import Confirm
@@ -45,20 +51,19 @@ class UserAuthOptions(Enum):
 def auth(username: Annotated[str, typer.Option()], action: Annotated[UserAuthOptions, typer.Option()]) -> None:
     api_connector = APIConnector()
 
-    match action:
-        case UserAuthOptions.add:
-            current_path = get_current_working_dir_relative_path_to_ecs_repo()
-            if Confirm.ask(
-                f'Are you sure you want to add [b]{current_path}[/b] as allowed path for user: [b]{username}[/b]'
-            ):
-                api_connector.add_auth(username, current_path)
+    if action is UserAuthOptions.add:
+        current_path = get_current_working_dir_relative_path_to_ecs_repo()
+        if Confirm.ask(
+            f'Are you sure you want to add [b]{current_path}[/b] as allowed path for user: [b]{username}[/b]'
+        ):
+            api_connector.add_auth(username, current_path)
 
-        case UserAuthOptions.list:
-            api_connector.list_auth(username)
+    elif action is UserAuthOptions.list:
+        api_connector.list_auth(username)
 
-        case UserAuthOptions.delete:
-            current_path = get_current_working_dir_relative_path_to_ecs_repo()
-            if Confirm.ask(
-                f'Are you sure you want to delete allowed path: [b]{current_path}[/b] for user: [b]{username}[/b]'
-            ):
-                api_connector.delete_auth(username, current_path)
+    elif action is UserAuthOptions.delete:
+        current_path = get_current_working_dir_relative_path_to_ecs_repo()
+        if Confirm.ask(
+            f'Are you sure you want to delete allowed path: [b]{current_path}[/b] for user: [b]{username}[/b]'
+        ):
+            api_connector.delete_auth(username, current_path)

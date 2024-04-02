@@ -3,7 +3,7 @@ from subprocess import run, CompletedProcess, DEVNULL
 
 def run_command(
     command: str, check: bool = True, capture_output: bool = False, env=None, output: bool = False
-) -> (CompletedProcess)[bytes]:
+) -> CompletedProcess:
     if capture_output:
         output = True
 
