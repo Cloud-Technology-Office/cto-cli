@@ -1,0 +1,61 @@
+[tool.poetry]
+name = "cto-cli"
+version = "0.1.1"
+description = "The CTO cli"
+authors = ["CTO <support@cloudtechnologyoffice.com>"]
+readme = "README.md"
+
+[project]
+license = { file = "LICENSE" }
+
+[project.urls]
+Homepage = "https://doc.cloudtechnologyoffice.com/ecs/latest/"
+#Source = ""
+
+[tool.poetry.dependencies]
+python = "^3.8"
+typer = "0.9.0"
+rich = "13.6.0"
+requests = "2.31.0"
+PyYAML = "6.0.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "8.0.0"
+pytest-mock = "3.12.0"
+responses = "0.25.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+cto = "cto_cli.main:main"
+
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:tool.poetry.version"] # version location
+branch = "main"                             # branch to make releases of
+changelog_file = "CHANGELOG.md"             # changelog file
+build_command = "true"
+dist_path = "dist/"                         # where to put dists
+upload_to_release = true                    # auto-create GitHub release
+remove_dist = false                         # don't remove dists
+patch_without_tag = true                    # patch release by default
+commit_author = "github-actions <github-actions@github.com>"
+tag_format = "{version}"
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = [
+    "build",
+    "chore",
+    "ci",
+    "docs",
+    "feat",
+    "fix",
+    "perf",
+    "style",
+    "refactor",
+    "test",
+]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
