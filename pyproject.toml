@@ -10,7 +10,7 @@ license = { file = "LICENSE" }
 
 [project.urls]
 Homepage = "https://doc.cloudtechnologyoffice.com/ecs/latest/"
-#Source = ""
+Source = "https://github.com/Cloud-Technology-Office/cto-cli"
 
 [tool.poetry.dependencies]
 python = "^3.8"
