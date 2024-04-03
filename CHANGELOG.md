@@ -2,47 +2,27 @@
 
 
 
-## v0.1.1 (2024-03-29)
+## v0.1.2 (2024-04-03)
 
 ### Build
 
-* build: use different build command ([`050c50f`](https://github.com/Cloud-Technology-Office/cto-cli/commit/050c50fcf33e123f89ac1e146c8c0277a8d8642f))
-
-* build: use different build command ([`7c37fe4`](https://github.com/Cloud-Technology-Office/cto-cli/commit/7c37fe4ff66d3b3401234db5da3e4456718423d6))
-
-* build: use different build command ([`fee9c0d`](https://github.com/Cloud-Technology-Office/cto-cli/commit/fee9c0dc17b1c6c492b3b3693af2280e3254aa1f))
-
-* build: use different build command ([`5059117`](https://github.com/Cloud-Technology-Office/cto-cli/commit/5059117f494459acda0e4eb6a085419090a9254d))
-
-* build: use different action to build pypi package ([`6fb6f1d`](https://github.com/Cloud-Technology-Office/cto-cli/commit/6fb6f1ddab2421de8ded2d5d05d859158a6c8f38))
-
-* build: use different action to build pypi package ([`bf9839d`](https://github.com/Cloud-Technology-Office/cto-cli/commit/bf9839dff9cfd4ceeb387a7d7874b22e7c2c2802))
-
-* build: use different action to build pypi package ([`4601e41`](https://github.com/Cloud-Technology-Office/cto-cli/commit/4601e41f0210c34294cccdd108d1fe583182186e))
-
-* build: enable pypi builds (#14) ([`c065655`](https://github.com/Cloud-Technology-Office/cto-cli/commit/c06565545a329d06ea5e4fbceb1627af78782f1c))
+* build: fix creating builds ([`0f64e3a`](https://github.com/Cloud-Technology-Office/cto-cli/commit/0f64e3a0fef98f9de3f7a0f8581829dfcdccd8b6))
 
 ### Fix
 
-* fix: formatting in tests ([`bbebe6e`](https://github.com/Cloud-Technology-Office/cto-cli/commit/bbebe6ecc83e7df3256120b7bbb1ad23695f122a))
+* fix: add python3.8 support (#2) ([`32c3986`](https://github.com/Cloud-Technology-Office/cto-cli/commit/32c3986496bef0046bcc45e4aa6922429e544c42))
 
 ### Unknown
 
-* Enable PyPi builds (#15)
+* Merge pull request #3 from Cloud-Technology-Office/fix_build
 
-* build: use different action to build pypi package ([`4a22748`](https://github.com/Cloud-Technology-Office/cto-cli/commit/4a227486174713aa77ecdbdd16c22e64e30dfbd3))
+build: fix builds ([`84c1171`](https://github.com/Cloud-Technology-Office/cto-cli/commit/84c11712f4c3f0ccf148a054924e2a63e617eaf2))
 
 
-## v0.1.0 (2024-03-29)
-
-### Build
-
-* build: enable pypi builds ([`af1b68a`](https://github.com/Cloud-Technology-Office/cto-cli/commit/af1b68a07a094966ec137ef7118182265be4854b))
-
-### Feature
-
-* feat: First release (#12) ([`49584e6`](https://github.com/Cloud-Technology-Office/cto-cli/commit/49584e60c1497840cff68d9239645c605acd18e7))
+## v0.1.1 (2024-04-02)
 
 ### Unknown
 
-* Initial commit ([`8172601`](https://github.com/Cloud-Technology-Office/cto-cli/commit/8172601b5f92bedd35abaf6999d3fdcc1e9d2afd))
+* Release 0.1.1 (#1) ([`6e39638`](https://github.com/Cloud-Technology-Office/cto-cli/commit/6e39638f433ef8c068958692f64e0ebe06332502))
+
+* Initial commit ([`43d9a1b`](https://github.com/Cloud-Technology-Office/cto-cli/commit/43d9a1bcca7ca498e5a13c5b8c6f1039a82c7b27))
