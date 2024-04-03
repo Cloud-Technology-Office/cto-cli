@@ -2,6 +2,15 @@
 
 
 
+## v0.1.3 (2024-04-03)
+
+### Fix
+
+* fix: pypi repo field (#5) ([`1f61b43`](https://github.com/Cloud-Technology-Office/cto-cli/commit/1f61b436d62e9c1fdc1c34552fc421778d481bf6))
+
+* fix: pypi package details (#4) ([`8f8a623`](https://github.com/Cloud-Technology-Office/cto-cli/commit/8f8a62393440db53b901a6f3f937745ad91355b1))
+
+
 ## v0.1.2 (2024-04-03)
 
 ### Build

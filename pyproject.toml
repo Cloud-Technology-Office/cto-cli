@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cto-cli"
-version = "0.1.2"
+version = "0.1.3"
 description = "The CTO cli"
 authors = ["CTO <support@cloudtechnologyoffice.com>"]
 readme = "README.md"
