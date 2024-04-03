@@ -4,13 +4,9 @@ version = "0.1.2"
 description = "The CTO cli"
 authors = ["CTO <support@cloudtechnologyoffice.com>"]
 readme = "README.md"
-
-[project]
-license = { file = "LICENSE" }
-
-[project.urls]
-Homepage = "https://doc.cloudtechnologyoffice.com/ecs/latest/"
-Source = "https://github.com/Cloud-Technology-Office/cto-cli"
+homepage = "https://doc.cloudtechnologyoffice.com/ecs/latest"
+source = "https://github.com/Cloud-Technology-Office/cto-cli"
+license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.8"
