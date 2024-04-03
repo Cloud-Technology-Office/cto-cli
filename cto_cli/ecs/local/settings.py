@@ -1,10 +1,11 @@
+from __future__ import annotations
+
+import sys
 import os
 import json
 from dataclasses import dataclass
 from functools import wraps
 from pathlib import Path
-from typing import Self
-
 from cto_cli.utils.errors import print_error
 
 CTO_DIR = Path.home() / '.cto'
@@ -26,7 +27,7 @@ class ECSSettings:
     ecs_path: str
 
     @classmethod
-    def load_from_env(cls) -> Self:
+    def load_from_env(cls) -> ECSSettings:
         try:
             return cls(
                 url=os.environ['ECS_URL'],
