@@ -1,3 +1,4 @@
+from functools import lru_cache
 from importlib.metadata import version as metadata_version
 from subprocess import CalledProcessError
 
@@ -24,6 +25,7 @@ def get_current_cli_version() -> str:
     return metadata_version('cto-cli')
 
 
+@lru_cache
 def check_versions_compatibility() -> None:
     current_cli_version = get_current_cli_version()
     cli_major, cli_minor, cli_patch = current_cli_version.split('.')

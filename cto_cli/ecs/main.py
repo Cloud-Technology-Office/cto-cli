@@ -1,7 +1,7 @@
 import typer
 from rich import print
 
-from cto_cli.ecs.api.connector import APIConnector, ApiError
+from cto_cli.ecs.api.connector import APIConnector, ApiTokenError, ApiConnectionError
 from cto_cli.ecs.commands import users, config
 from cto_cli.ecs.local.settings import (
     store_settings,
@@ -35,30 +35,47 @@ def ask_and_store_settings() -> None:
     except SettingsNotFound:
         settings = None
 
-    api_url = typer.prompt("What's the API url?", default=settings.url if settings else None)
+    saas_token = None
 
-    while not (api_url.startswith('http://') or api_url.startswith('https://')):
-        print_error("URL doesn't include the protocol")
+    saas = typer.confirm(
+        'If you\'re using ECS Cloud type Y, if you\'re using your own on-prem ECS server, type N', abort=False
+    )
+    if saas:
+        saas_token = typer.prompt(
+            "What's your ECS SaaS token?", default=settings.saas_token if settings and settings.saas_token else None
+        )
+        api_url = 'https://api.enterpriseconfigurationservice.com'
+        api_connector = APIConnector(
+            load_settings=False, url=api_url, headers={'Authorization': 'very_first_user', 'x-saas-token': saas_token}
+        )
+    else:
         api_url = typer.prompt("What's the API url?", default=settings.url if settings else None)
 
-    api_connector = APIConnector(load_settings=False, url=api_url, headers={'Authorization': 'very_first_user'})
+        while not (api_url.startswith('http://') or api_url.startswith('https://')):
+            print_error("URL doesn't include the protocol")
+            api_url = typer.prompt("What's the API url?", default=settings.url if settings else None)
+        api_connector = APIConnector(load_settings=False, url=api_url, headers={'Authorization': 'very_first_user'})
+
     try:
         api_connector.check_api_connectivity()
-    except ApiError:
+    except ApiConnectionError as e:
+        print_error(str(e))
+        ask_and_store_settings()
+    except ApiTokenError:
         # admin account already exist
-        token = typer.prompt("What's your token?", default=settings.token if settings else None)
-        store_settings(api_url, token)
+        user_token = typer.prompt("What's your User token?", default=settings.token if settings else None)
+        store_settings(api_url, user_token, saas_token)
     else:
         # create admin account
-        token = create_admin_account(api_connector)
-        store_settings(api_url, token)
+        user_token = create_admin_account(api_connector)
+        store_settings(api_url, user_token, saas_token)
 
 
 def store_and_validate_settings() -> None:
     ask_and_store_settings()
     try:
         APIConnector().check_api_connectivity()
-    except ApiError as e:
+    except ApiTokenError as e:
         print_error(str(e))
         store_and_validate_settings()
 
@@ -66,7 +83,6 @@ def store_and_validate_settings() -> None:
 @app.command(name='init')
 def init() -> None:
     check_installed_tools()
-    check_versions_compatibility()
     reinit = False
 
     try:
@@ -75,11 +91,13 @@ def init() -> None:
         current_settings = None
 
     if current_settings:
+        check_versions_compatibility()
         print(f'ECS has been already inited in path: [b]{current_settings.ecs_path}[/b]')
         reinit = typer.confirm('Do you want to re-init it?', abort=True)
 
     if reinit is True or current_settings is None:
         check_working_dir_is_empty()
         store_and_validate_settings()
+        check_versions_compatibility()
         create_repo_dir()
         print('[green]Your credentials were saved, run [b]cto ecs config pull[/b] to start[/green]')

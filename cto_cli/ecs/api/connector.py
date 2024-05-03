@@ -14,7 +14,11 @@ from cto_cli.ecs.local.settings import load_ecs_settings, SettingsNotFound
 from cto_cli.utils.errors import print_error
 
 
-class ApiError(Exception):
+class ApiTokenError(Exception):
+    pass
+
+
+class ApiConnectionError(Exception):
     pass
 
 
@@ -27,14 +31,17 @@ class APIConnector:
             self._set_api_details()
 
     @staticmethod
-    def _handle_response(response: requests.Response) -> None:
+    def _handle_error_response(error: requests.exceptions.HTTPError):
+        try:
+            print_error(f'{error.response.json()["detail"]}', exit=True)
+        except Exception:
+            print_error(f'{error.response.text}', exit=True)
+
+    def _handle_response(self, response: requests.Response) -> None:
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError as e:
-            try:
-                print_error(f'{e.response.json()["detail"]}', exit=True)
-            except Exception:
-                print_error(f'{e.response.text}', exit=True)
+            self._handle_error_response(e)
 
     def _set_api_details(self) -> None:
         try:
@@ -43,7 +50,10 @@ class APIConnector:
             print_error('Credentials not found, run [b]cto ecs init[b]', exit=True)
             sys.exit(1)
 
-        self._headers = {'Authorization': settings.token}
+        self._headers = {
+            'Authorization': settings.token,
+            **({'x-saas-token': settings.saas_token} if settings.saas_token else {}),
+        }
         self._url = settings.url
 
     @staticmethod
@@ -235,8 +245,11 @@ class APIConnector:
         try:
             response = requests.request('get', f'{self._url}/users', headers=self._headers)
         except (ConnectionError, Timeout):
-            raise ApiError('Could not connect to the API, validate URL')
+            raise ApiConnectionError('Could not connect to the API, validate URL')
         try:
             response.raise_for_status()
-        except HTTPError:
-            raise ApiError('Token is not valid')
+        except HTTPError as e:
+            if e.response.status_code == 401:
+                raise ApiTokenError('Token is not valid')
+            else:
+                self._handle_error_response(e)

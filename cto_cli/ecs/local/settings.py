@@ -25,6 +25,7 @@ class ECSSettings:
     url: str
     token: str
     ecs_path: str
+    saas_token: None | str = None
 
     @classmethod
     def load_from_env(cls) -> ECSSettings:
@@ -33,6 +34,7 @@ class ECSSettings:
                 url=os.environ['ECS_URL'],
                 token=os.environ['ECS_TOKEN'],
                 ecs_path=os.environ['ECS_LOCAL_PATH'],
+                saas_token=os.getenv('ECS_SAAS_TOKEN')
             )
         except KeyError:
             raise EnvSettingsNotFound
@@ -81,11 +83,11 @@ def create_repo_dir() -> None:
     get_repo_path().mkdir(parents=True, exist_ok=True)
 
 
-def store_settings(url: str, token: str) -> None:
+def store_settings(url: str, token: str, saas_token: None | str = None) -> None:
     CTO_DIR.mkdir(parents=True, exist_ok=True)
 
     with open(ECS_SETTINGS_LOCATION, 'w') as f:
-        f.write(json.dumps({'token': token, 'url': url, 'ecs_path': str(WORKING_DIR)}))
+        f.write(json.dumps({'token': token, 'url': url, 'saas_token': saas_token, 'ecs_path': str(WORKING_DIR)}))
 
 
 def _validate_workdir_in_ecs_repo_path():
