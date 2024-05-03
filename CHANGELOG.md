@@ -2,6 +2,19 @@
 
 
 
+## v0.2.0 (2024-05-03)
+
+### Feature
+
+* feat: Add support for ECS SaaS ([`c7e6963`](https://github.com/Cloud-Technology-Office/cto-cli/commit/c7e6963ae55725c9433cee757f4e1b6c6a126594))
+
+### Unknown
+
+* Merge pull request #6 from Cloud-Technology-Office/saas_support
+
+Add support for ECS SaaS ([`632c43d`](https://github.com/Cloud-Technology-Office/cto-cli/commit/632c43ddd6a08d28b45887d52654dc8d7c407c93))
+
+
 ## v0.1.3 (2024-04-03)
 
 ### Fix
