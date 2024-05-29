@@ -2,6 +2,21 @@
 
 
 
+## v0.3.0 (2024-05-29)
+
+### Feature
+
+* feat: Add support for `cto ecs config push --tag {tag}`, `cto ecs config build --config-id {config-id} --detect-drift` and new command `cto ecs config generate-schema`
+
+* feat: validate json|yaml files before they get pushed to the server
+
+* fix: display better schema errors ([`fd637b5`](https://github.com/Cloud-Technology-Office/cto-cli/commit/fd637b514f3e318d99f3e34e4da548479dedc709))
+
+### Unknown
+
+* Merge pull request #8 from Cloud-Technology-Office/development ([`ccf5c72`](https://github.com/Cloud-Technology-Office/cto-cli/commit/ccf5c72dca247db70f65fdf32d51e45ddb4ae73a))
+
+
 ## v0.2.0 (2024-05-03)
 
 ### Feature
