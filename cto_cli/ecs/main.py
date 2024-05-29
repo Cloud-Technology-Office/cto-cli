@@ -23,8 +23,9 @@ def create_admin_account(api_connector: APIConnector) -> str:
     username = typer.prompt("What's your user name?")
     given_name = typer.prompt("What's your user given name?")
     family_name = typer.prompt("What's your user family name?")
+    email = typer.prompt("What's your email?")
     response = api_connector.create_user(
-        username=username, given_name=given_name, family_name=family_name, admin=True, return_as_dict=True
+        username=username, given_name=given_name, family_name=family_name, email=email, admin=True, return_as_dict=True
     )
     return response['token']
 
@@ -38,7 +39,7 @@ def ask_and_store_settings() -> None:
     saas_token = None
 
     saas = typer.confirm(
-        'If you\'re using ECS Cloud type Y, if you\'re using your own on-prem ECS server, type N', abort=False
+        "If you're using ECS Cloud type Y, if you're using your own on-prem ECS server, type N", abort=False
     )
     if saas:
         saas_token = typer.prompt(
