@@ -74,6 +74,10 @@ def test_handle_config_push(
     api_connector_mock = mocker.Mock(spec=operations.APIConnector)
     api_connector_mock.push_config_changes.return_value = server_response
     mocker.patch.object(
+        files_handler.FilesHandler, 'validate_files'
+    )
+
+    mocker.patch.object(
         files_handler.FilesHandler, '_get_modified_local_files'
     ).return_value = files_handler.ModifiedFiles(**modified_local_files)
     mocker.patch.object(operations, '_restore_and_delete_stash')

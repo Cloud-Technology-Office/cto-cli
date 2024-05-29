@@ -6,7 +6,6 @@ if sys.version_info < (3, 11):
 else:
     from typing import Annotated
 
-
 import typer
 from rich.prompt import Confirm
 

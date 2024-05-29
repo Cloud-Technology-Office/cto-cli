@@ -84,15 +84,28 @@ def test_build(app, cmd, api_response, api_response_type, api_error, cli_respons
 
 
 @pytest.mark.parametrize(
-    'is_updated_needed,exit_code,server_modified_files,cli_response',
+    'cmd,tag,is_update_needed,exit_code,server_modified_files,cli_response',
     [
-        (True, 1, None, 'Repo is not up-to-date, run cto ecs config pull to update'),
-        (False, 0, None, ''),
-        (False, 0, ['file1', 'file2'], ''),
+        (['ecs', 'config', 'push'], None, True, 1, None, 'Repo is not up-to-date, run cto ecs config pull to update'),
+        (['ecs', 'config', 'push'], None, False, 0, None, ''),
+        (['ecs', 'config', 'push'], None, False, 0, ['file1', 'file2'], ''),
+        (['ecs', 'config', 'push', '--tag', 'test'], 'test', False, 0, ['file1', 'file2'], ''),
     ],
 )
 @responses.activate
-def test_push(config, files_handler, app, mocker, is_updated_needed, exit_code, server_modified_files, cli_response):
+def test_push(
+    mocked_compatibility_check,
+    config,
+    files_handler,
+    app,
+    mocker,
+    cmd,
+    tag,
+    is_update_needed,
+    exit_code,
+    server_modified_files,
+    cli_response,
+):
     server_hashes_response = {'test': 'test_hash'}
     server_response_config = {
         'status': 'Changes were pushed',
@@ -100,9 +113,9 @@ def test_push(config, files_handler, app, mocker, is_updated_needed, exit_code, 
         'skipped_files': [],
         'server_modified_files': [],
     }
-    mocker.patch.object(config, 'is_repo_update_needed').return_value = is_updated_needed
+    mocker.patch.object(config, 'is_repo_update_needed').return_value = is_update_needed
 
-    if is_updated_needed is False:
+    if is_update_needed is False:
         mocker.patch.object(config, 'handle_config_push').return_value = server_modified_files
         mocker.patch.object(config, 'pull_remote_repo')
         mocker.patch.object(config, 'update_server_modified_files')
@@ -110,11 +123,11 @@ def test_push(config, files_handler, app, mocker, is_updated_needed, exit_code, 
     responses.add(responses.GET, f'{API_URL}/config/hashes', json=server_hashes_response, status=200)
     responses.add(responses.POST, f'{API_URL}/config', json=server_response_config, status=200)
 
-    result = runner.invoke(app, ['ecs', 'config', 'push'])
+    result = runner.invoke(app, cmd)
 
     config.is_repo_update_needed.assert_called_with(server_hashes_response)
-    if is_updated_needed is False:
-        config.handle_config_push.assert_called_with(TypeMatcher(config.APIConnector))
+    if is_update_needed is False:
+        config.handle_config_push.assert_called_with(TypeMatcher(config.APIConnector), tag)
         config.pull_remote_repo.assert_called_with(
             TypeMatcher(config.APIConnector), **{'show_status': False, 'update_type': 'both'}
         )
@@ -203,3 +216,11 @@ def test_decrypt(app):
     result = runner.invoke(app, ['ecs', 'config', 'decrypt', '--path', '/encrypted.yaml'])
     assert result.exit_code == 0
     assert result.stdout.strip() == json.dumps({'decrypted': 'content'}, indent=2)
+
+
+@responses.activate
+def test_generate_schema(app):
+    responses.add(responses.POST, f'{API_URL}/config/generate_schema', body='yaml_content', status=200)
+    result = runner.invoke(app, ['ecs', 'config', 'generate-schema', '--path', '/test/path', '--strategy-name', 'test'])
+    assert result.exit_code == 0
+    assert result.stdout.strip() == 'yaml_content'
