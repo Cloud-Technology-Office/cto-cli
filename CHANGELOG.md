@@ -2,6 +2,17 @@
 
 
 
+## v0.3.2 (2024-05-29)
+
+### Fix
+
+* fix: ask about email on ecs init ([`b500778`](https://github.com/Cloud-Technology-Office/cto-cli/commit/b5007785ef71d8b74a0d160487ce33615d32e3fe))
+
+### Unknown
+
+* Merge pull request #10 from Cloud-Technology-Office/email_fix ([`b254d9f`](https://github.com/Cloud-Technology-Office/cto-cli/commit/b254d9ff83767c5805ad8110c2aa48b1c636d631))
+
+
 ## v0.3.1 (2024-05-29)
 
 ### Fix
