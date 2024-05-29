@@ -142,7 +142,7 @@ def _restore_and_delete_stash(commit: bool = False):
             run_command('git commit -a -m "changes before push"')
 
 
-def handle_config_push(api_connector: APIConnector) -> Optional[list[str]]:
+def handle_config_push(api_connector: APIConnector, tag: str | None = None) -> Optional[list[str]]:
     _restore_and_delete_stash()
 
     commit_hash = FilesHandler.get_stored_remote_hashes()['current']['repo_hash']
@@ -151,6 +151,8 @@ def handle_config_push(api_connector: APIConnector) -> Optional[list[str]]:
     if not modified_files.has_changes():
         print('[yellow]There is nothing to be pushed[/yellow]')
         sys.exit(0)
+
+    FilesHandler.validate_files(modified_files.get_added_or_updated_paths())
 
     show_modified_local_files(modified_files)
 
@@ -188,7 +190,7 @@ def handle_config_push(api_connector: APIConnector) -> Optional[list[str]]:
         modified_files.get_added_or_updated_paths(), root_path=get_repo_path()
     )
 
-    response = api_connector.push_config_changes(zipped_local_changes, modified_files.deleted, commit_hash)
+    response = api_connector.push_config_changes(zipped_local_changes, modified_files.deleted, commit_hash, tag)
 
     if response and (skipped_files := response.get('skipped_files')):
         skipped_files_json = json.dumps(skipped_files, indent=4)

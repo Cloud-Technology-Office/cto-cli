@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import sys
 import os
 import json
 from dataclasses import dataclass
 from functools import wraps
 from pathlib import Path
 from cto_cli.utils.errors import print_error
+from json.decoder import JSONDecodeError
 
 CTO_DIR = Path.home() / '.cto'
 ECS_SETTINGS_LOCATION = CTO_DIR / 'ecs_settings.json'
@@ -34,7 +34,7 @@ class ECSSettings:
                 url=os.environ['ECS_URL'],
                 token=os.environ['ECS_TOKEN'],
                 ecs_path=os.environ['ECS_LOCAL_PATH'],
-                saas_token=os.getenv('ECS_SAAS_TOKEN')
+                saas_token=os.getenv('ECS_SAAS_TOKEN'),
             )
         except KeyError:
             raise EnvSettingsNotFound
@@ -48,7 +48,10 @@ def load_ecs_settings() -> ECSSettings:
 
     try:
         with open(ECS_SETTINGS_LOCATION, 'r') as f:
-            return ECSSettings(**json.load(f))
+            try:
+                return ECSSettings(**json.load(f))
+            except JSONDecodeError:
+                print_error('Your ECS settings file is corrupted', exit=True)
     except FileNotFoundError:
         raise SettingsNotFound
 
@@ -87,7 +90,9 @@ def store_settings(url: str, token: str, saas_token: None | str = None) -> None:
     CTO_DIR.mkdir(parents=True, exist_ok=True)
 
     with open(ECS_SETTINGS_LOCATION, 'w') as f:
-        f.write(json.dumps({'token': token, 'url': url, 'saas_token': saas_token, 'ecs_path': str(WORKING_DIR)}))
+        f.write(
+            json.dumps({'token': token, 'url': url, 'saas_token': saas_token, 'ecs_path': str(WORKING_DIR)}, indent=4)
+        )
 
 
 def _validate_workdir_in_ecs_repo_path():

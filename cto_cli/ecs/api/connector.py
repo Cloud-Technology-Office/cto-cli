@@ -32,6 +32,15 @@ class APIConnector:
 
     @staticmethod
     def _handle_error_response(error: requests.exceptions.HTTPError):
+        if error.response.status_code == 422:
+            try:
+                error = [detail['msg'] for detail in error.response.json()['detail']]
+            except Exception:
+                pass
+            else:
+                if len(error) == 1:
+                    error = error[0]
+                print_error(error, exit=True)
         try:
             print_error(f'{error.response.json()["detail"]}', exit=True)
         except Exception:
@@ -64,7 +73,7 @@ class APIConnector:
         elif response.headers['content-type'] == 'application/yaml':
             print(Syntax(response.text, 'yaml'))
         else:
-            print(response.text)
+            print(Syntax(response.text, 'text'))
 
     def _make_request(
         self,
@@ -173,14 +182,17 @@ class APIConnector:
         return response.json()
 
     def push_config_changes(
-        self, file_with_changes: BytesIO, deleted_files: list[str], commit_hash: str
+        self, file_with_changes: BytesIO, deleted_files: list[str], commit_hash: str, tag: str | None = None
     ) -> None | dict:
         response = self._make_request(
             'post',
             'config',
             headers={'commit-hash': commit_hash},
             files={'file': file_with_changes},
-            data={'deleted_files': deleted_files},
+            data={
+                'deleted_files': deleted_files,
+                **({'tag': tag} if tag else {}),
+            },
         )
 
         self._handle_response(response)
@@ -196,6 +208,8 @@ class APIConnector:
         strategy_name: str | None = None,
         recursive: bool = False,
         show_secrets: bool = False,
+        config_id: str | None = None,
+        detect_drift: bool = False,
         format: str | None = None,
         filter: str | None = None,
     ):
@@ -209,7 +223,19 @@ class APIConnector:
                 **({'strategy_name': strategy_name} if strategy_name else {}),
                 **({'format': format} if format else {}),
                 **({'filter': filter} if filter else {}),
+                **({'config_id': config_id} if config_id else {}),
+                **({'detect_drift': detect_drift} if detect_drift else {}),
             },
+        )
+
+        self._handle_response(response)
+        self._print_response(response)
+
+    def generate_schema(self, path: str | Path, strategy_name: str, write: bool = False):
+        response = self._make_request(
+            'post',
+            'config/generate_schema',
+            json={'path': path, 'strategy_name': strategy_name, 'write': write},
         )
 
         self._handle_response(response)

@@ -42,7 +42,7 @@ def ask_and_store_settings() -> None:
     )
     if saas:
         saas_token = typer.prompt(
-            "What's your ECS SaaS token?", default=settings.saas_token if settings and settings.saas_token else None
+            "What's your ECS Cloud token?", default=settings.saas_token if settings and settings.saas_token else None
         )
         api_url = 'https://api.enterpriseconfigurationservice.com'
         api_connector = APIConnector(
