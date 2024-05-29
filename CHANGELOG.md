@@ -2,6 +2,17 @@
 
 
 
+## v0.3.1 (2024-05-29)
+
+### Fix
+
+* fix: add email field for users ([`1b35f3b`](https://github.com/Cloud-Technology-Office/cto-cli/commit/1b35f3b26605467bfe2543ec69b973b47148f2f9))
+
+### Unknown
+
+* Merge pull request #9 from Cloud-Technology-Office/email_fix ([`22569e2`](https://github.com/Cloud-Technology-Office/cto-cli/commit/22569e20e0f7c0079ffe826faff7a252bac07d01))
+
+
 ## v0.3.0 (2024-05-29)
 
 ### Feature
