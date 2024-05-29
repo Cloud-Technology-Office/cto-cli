@@ -2,6 +2,8 @@ from __future__ import annotations
 import base64
 import io
 import json
+import yaml
+from yaml import YAMLError
 import os
 import shutil
 import zipfile
@@ -14,6 +16,7 @@ from cto_cli.ecs.local.settings import get_repo_path, get_hashes_path
 from cto_cli.utils.errors import print_error
 
 EXCLUDED_PATHS = ['*.idea/*', '*.git/*', '*.vscode/*']
+EXTENSIONS_TO_VALIDATE = ['.json', '.yaml', '.yml']
 
 
 class HashTypeUpdate:
@@ -172,3 +175,26 @@ class FilesHandler:
 
                 with zipfile.ZipFile(io.BytesIO(decoded_data), 'r') as zip_file:
                     zip_file.extractall(path=extract_path)
+
+    @staticmethod
+    def validate_files(file_paths: list[str]):
+        invalid_files = []
+
+        for file_path in file_paths:
+            for extension_to_validate in EXTENSIONS_TO_VALIDATE:
+                if file_path.endswith(extension_to_validate):
+                    with open(file_path) as f:
+                        try:
+                            content = yaml.safe_load(f)
+                        except YAMLError:
+                            invalid_files.append(file_path)
+
+                        if not isinstance(content, (dict, list)):
+                            print_error(
+                                f'Validation failed for file: [b]{file_path}[/b] ECS supports only JSONs|YAMLs that are an array '
+                                f'or an object',
+                                exit=True,
+                            )
+
+        if invalid_files:
+            print_error(f'These files contain errors: {invalid_files}', exit=True)
