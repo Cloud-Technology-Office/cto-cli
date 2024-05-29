@@ -22,7 +22,20 @@ def test_user_create(app):
     server_response = {'token': 'test_token'}
     responses.add(responses.POST, f'{API_URL}/users', json=server_response, status=200)
     result = runner.invoke(
-        app, ['ecs', 'users', 'create', '--username', 'test', '--family-name', 'family', '--given-name', 'surname']
+        app,
+        [
+            'ecs',
+            'users',
+            'create',
+            '--username',
+            'test',
+            '--family-name',
+            'family',
+            '--given-name',
+            'surname',
+            '--email',
+            'test@email.com',
+        ],
     )
     assert result.exit_code == 0
     assert result.stdout.strip() == json.dumps(server_response)
