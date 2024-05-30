@@ -2,6 +2,18 @@
 
 
 
+## v0.3.3 (2024-05-30)
+
+### Fix
+
+* fix: Add retries on server errors
+* fix: pull config on ecs init ([`829e999`](https://github.com/Cloud-Technology-Office/cto-cli/commit/829e999057895c6cd60c26ede50d3cefbb2fd4c7))
+
+### Unknown
+
+* Merge pull request #11 from Cloud-Technology-Office/fixes ([`4a74c6b`](https://github.com/Cloud-Technology-Office/cto-cli/commit/4a74c6b0e8ce89b61f1ea0ea6d11fff6de23f785))
+
+
 ## v0.3.2 (2024-05-29)
 
 ### Fix
