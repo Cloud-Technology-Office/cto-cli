@@ -9,9 +9,13 @@ import requests
 from requests import HTTPError, ConnectionError, Timeout
 from rich import print, print_json
 from rich.syntax import Syntax
-
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, RetryCallState
 from cto_cli.ecs.local.settings import load_ecs_settings, SettingsNotFound
 from cto_cli.utils.errors import print_error
+
+
+class ServerError(Exception):
+    pass
 
 
 class ApiTokenError(Exception):
@@ -20,6 +24,12 @@ class ApiTokenError(Exception):
 
 class ApiConnectionError(Exception):
     pass
+
+
+def server_retry_callback(retry_state: RetryCallState):
+    del retry_state
+
+    print_error('Internal server error', exit=True)
 
 
 class APIConnector:
@@ -69,12 +79,22 @@ class APIConnector:
     def _print_response(response: requests.Response) -> None:
         if response.headers['content-type'] == 'application/json':
             response_json = response.json()
+
+            if 'status' in response_json and len(response_json) == 1:
+                print(f'[green]{response_json["status"]}[/green]')
+                return
+
             print_json(data=response_json)
         elif response.headers['content-type'] == 'application/yaml':
             print(Syntax(response.text, 'yaml'))
         else:
             print(Syntax(response.text, 'text'))
 
+    @retry(
+        stop=stop_after_attempt(3),
+        retry=retry_if_exception_type(ServerError),
+        retry_error_callback=server_retry_callback,
+    )
     def _make_request(
         self,
         method: str,
@@ -89,7 +109,7 @@ class APIConnector:
             headers = {}
 
         try:
-            return requests.request(
+            response = requests.request(
                 method,
                 url=f'{self._url}/{url}',
                 headers={**self._headers, **headers},
@@ -100,6 +120,12 @@ class APIConnector:
             )
         except requests.exceptions.RequestException:
             print_error('Cannot connect to ECS API', exit=True)
+
+        else:
+            if response.status_code >= 500:
+                raise ServerError
+
+            return response
 
     # USERS
     def create_user(

@@ -32,6 +32,7 @@ def main_ecs(mocked_validate_current_dir, mocked_settings):
 def test_init(main_ecs, app, mocker, settings_exist, reinit):
     mocker.patch.object(main_ecs, 'check_installed_tools')
     mocker.patch.object(main_ecs, 'load_ecs_settings')
+    mocker.patch.object(main_ecs.config, 'pull_remote_repo')
 
     mocker.patch.object(main_ecs, 'check_working_dir_is_empty')
     mocker.patch.object(main_ecs, 'store_and_validate_settings')
@@ -62,7 +63,8 @@ def test_init(main_ecs, app, mocker, settings_exist, reinit):
         assert result.stdout.strip() == (
             'ECS has been already inited in path: ecs_local_path\n'
             'Do you want to re-init it? [y/N]: y\n'
-            'Your credentials were saved, run cto ecs config pull to start'
+            'Your credentials were saved and config has been downloaded, cd repo to work with\nit'
         )
     elif settings_exist is False:
-        assert result.stdout.strip() == 'Your credentials were saved, run cto ecs config pull to start'
+        assert result.stdout.strip() == ('Your credentials were saved and config has been downloaded, cd repo to work '
+                                         'with\nit')

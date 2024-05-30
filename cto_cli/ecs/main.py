@@ -101,4 +101,8 @@ def init() -> None:
         store_and_validate_settings()
         check_versions_compatibility()
         create_repo_dir()
-        print('[green]Your credentials were saved, run [b]cto ecs config pull[/b] to start[/green]')
+        config.pull_remote_repo(APIConnector())
+        print(
+            '[green]Your credentials were saved and config has been downloaded, [b]cd repo[/b] to work with it['
+            '/green]'
+        )
