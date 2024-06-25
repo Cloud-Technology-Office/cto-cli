@@ -25,6 +25,7 @@ class ECSSettings:
     url: str
     token: str
     ecs_path: str
+    repo_name: None | str = None
     saas_token: None | str = None
 
     @classmethod
@@ -35,6 +36,7 @@ class ECSSettings:
                 token=os.environ['ECS_TOKEN'],
                 ecs_path=os.environ['ECS_LOCAL_PATH'],
                 saas_token=os.getenv('ECS_SAAS_TOKEN'),
+                repo_name=os.getenv('ECS_REPO_NAME'),
             )
         except KeyError:
             raise EnvSettingsNotFound

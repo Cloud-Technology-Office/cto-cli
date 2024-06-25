@@ -38,7 +38,7 @@ def test_user_create(app):
         ],
     )
     assert result.exit_code == 0
-    assert result.stdout.strip() == json.dumps(server_response)
+    assert result.stdout.strip() == '{\n  "token": "test_token"\n}'
 
 
 @responses.activate

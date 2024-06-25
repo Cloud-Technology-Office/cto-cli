@@ -46,8 +46,18 @@ def ask_and_store_settings() -> None:
             "What's your ECS Cloud token?", default=settings.saas_token if settings and settings.saas_token else None
         )
         api_url = 'https://api.enterpriseconfigurationservice.com'
+        repo_name = typer.prompt(
+            "What's your repo name you want to use?",
+            default=settings.repo_name if settings and settings.repo_name else None,
+        )
         api_connector = APIConnector(
-            load_settings=False, url=api_url, headers={'Authorization': 'very_first_user', 'x-saas-token': saas_token}
+            load_settings=False,
+            url=api_url,
+            headers={
+                'Authorization': 'very_first_user',
+                'x-saas-token': saas_token,
+                **({'x-repo-nane': repo_name} if repo_name else {}),
+            },
         )
     else:
         api_url = typer.prompt("What's the API url?", default=settings.url if settings else None)
@@ -55,7 +65,20 @@ def ask_and_store_settings() -> None:
         while not (api_url.startswith('http://') or api_url.startswith('https://')):
             print_error("URL doesn't include the protocol")
             api_url = typer.prompt("What's the API url?", default=settings.url if settings else None)
-        api_connector = APIConnector(load_settings=False, url=api_url, headers={'Authorization': 'very_first_user'})
+
+        repo_name = typer.prompt(
+            "What's your repo name you want to use?",
+            default=settings.repo_name if settings and settings.repo_name else None,
+        )
+
+        api_connector = APIConnector(
+            load_settings=False,
+            url=api_url,
+            headers={
+                'Authorization': 'very_first_user',
+                **({'x-repo-nane': repo_name} if repo_name else {}),
+            },
+        )
 
     try:
         api_connector.check_api_connectivity()

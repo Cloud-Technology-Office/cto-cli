@@ -72,6 +72,7 @@ class APIConnector:
         self._headers = {
             'Authorization': settings.token,
             **({'x-saas-token': settings.saas_token} if settings.saas_token else {}),
+            **({'x-repo-name': settings.repo_name} if settings.repo_name else {}),
         }
         self._url = settings.url
 
@@ -158,10 +159,15 @@ class APIConnector:
         if return_as_dict:
             return response.json()
         else:
-            print(response.text)
+            print_json(data=response.json())
 
     def list_users(self):
         response = self._make_request('get', 'users')
+        self._handle_response(response)
+        print_json(data=response.json())
+
+    def regenerate_user_token(self, username: str):
+        response = self._make_request('post', f'users/{username}/token/regenerate')
         self._handle_response(response)
         print_json(data=response.json())
 

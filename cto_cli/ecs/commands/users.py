@@ -21,6 +21,11 @@ def list_users() -> None:
     APIConnector().list_users()
 
 
+@app.command(name='regenerate-token')
+def regenerate_token(username: Annotated[str, typer.Option()]):
+    APIConnector().regenerate_user_token(username)
+
+
 @app.command(name='create')
 def create(
     username: Annotated[str, typer.Option()],
