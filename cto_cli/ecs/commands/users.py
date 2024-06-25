@@ -35,6 +35,7 @@ def create(
     admin: bool = False,
     read_secrets: bool = False,
     edit_strategies: bool = False,
+    edit_webhooks: bool = False,
 ):
     APIConnector().create_user(
         username=username,
@@ -44,6 +45,7 @@ def create(
         admin=admin,
         read_secrets=read_secrets,
         edit_strategies=edit_strategies,
+        edit_webhooks=edit_webhooks
     )
 
 

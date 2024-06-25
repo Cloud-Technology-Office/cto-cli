@@ -139,6 +139,7 @@ class APIConnector:
         return_as_dict: bool = False,
         read_secrets: bool = False,
         edit_strategies: bool = False,
+        edit_webhooks: bool = False,
     ) -> dict | None:
         response = self._make_request(
             'post',
@@ -151,6 +152,7 @@ class APIConnector:
                 'admin': admin,
                 **({'read_secrets': read_secrets} if admin is False else {}),
                 **({'edit_strategies': edit_strategies} if admin is False else {}),
+                **({'edit_webhooks': edit_webhooks} if admin is False else {}),
             },
             headers=self._headers,
         )
