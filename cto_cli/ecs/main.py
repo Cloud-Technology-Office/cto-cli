@@ -56,7 +56,7 @@ def ask_and_store_settings() -> None:
             headers={
                 'Authorization': 'very_first_user',
                 'x-saas-token': saas_token,
-                **({'x-repo-nane': repo_name} if repo_name else {}),
+                **({'x-repo-name': repo_name} if repo_name else {}),
             },
         )
     else:
@@ -76,7 +76,7 @@ def ask_and_store_settings() -> None:
             url=api_url,
             headers={
                 'Authorization': 'very_first_user',
-                **({'x-repo-nane': repo_name} if repo_name else {}),
+                **({'x-repo-name': repo_name} if repo_name else {}),
             },
         )
 

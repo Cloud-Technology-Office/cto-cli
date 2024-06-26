@@ -42,6 +42,44 @@ def test_user_create(app):
 
 
 @responses.activate
+def test_user_edit(app):
+    responses.add(responses.PATCH, f'{API_URL}/users/test', status=204)
+    result = runner.invoke(
+        app,
+        [
+            'ecs',
+            'users',
+            'edit',
+            '--username',
+            'test',
+            '--given-name',
+            'surname',
+            '--email',
+            'test@email.com',
+        ],
+    )
+    assert result.exit_code == 0
+    assert result.stdout.strip() == 'User has been modified'
+
+
+@responses.activate
+def test_user_delete(app):
+    responses.add(responses.DELETE, f'{API_URL}/users/test', status=204)
+    result = runner.invoke(
+        app,
+        [
+            'ecs',
+            'users',
+            'delete',
+            '--username',
+            'test',
+        ],
+    )
+    assert result.exit_code == 0
+    assert result.stdout.strip() == 'User has been deleted'
+
+
+@responses.activate
 def test_user_list(app):
     server_response = {'user': 'details'}
     responses.add(responses.GET, f'{API_URL}/users', json=server_response, status=200)

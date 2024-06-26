@@ -163,6 +163,45 @@ class APIConnector:
         else:
             print_json(data=response.json())
 
+    def delete_user(self, username: str) -> None:
+        response = self._make_request(
+            'delete',
+            f'users/{username}',
+        )
+        self._handle_response(response)
+        if response.status_code == 204:
+            print('[green]User has been deleted[/green]')
+
+    def edit_user(
+        self,
+        username: str,
+        given_name: str | None = None,
+        family_name: str | None = None,
+        email: str | None = None,
+        admin: bool | None = None,
+        read_secrets: bool | None = None,
+        edit_strategies: bool | None = None,
+        edit_webhooks: bool | None = None,
+    ) -> None:
+        response = self._make_request(
+            'patch',
+            f'users/{username}',
+            json={
+                **({'given_name': given_name} if given_name is not None else {}),
+                **({'family_name': family_name} if family_name is not None else {}),
+                **({'email': email} if email is not None else {}),
+                **({'admin': admin} if admin is not None else {}),
+                **({'read_secrets': read_secrets} if read_secrets is not None else {}),
+                **({'edit_strategies': edit_strategies} if edit_strategies is not None else {}),
+                **({'edit_webhooks': edit_webhooks} if edit_webhooks is not None else {}),
+            },
+            headers=self._headers,
+        )
+        self._handle_response(response)
+
+        if response.status_code == 204:
+            print('[green]User has been modified[/green]')
+
     def list_users(self):
         response = self._make_request('get', 'users')
         self._handle_response(response)
