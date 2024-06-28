@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import requests
 from requests import HTTPError, ConnectionError, Timeout
@@ -212,12 +212,13 @@ class APIConnector:
         self._handle_response(response)
         print_json(data=response.json())
 
-    def add_auth(self, username: str, allowed_path: str | Path) -> None:
+    def add_auth(self, username: str, allowed_path: str | Path, mode: Literal['read', 'read_write'] = None) -> None:
         response = self._make_request(
             'post',
             f'users/{username}/auth',
             json={
                 'allowed_path': str(allowed_path),
+                **({'mode': mode} if mode else {}),
             },
         )
         self._handle_response(response)

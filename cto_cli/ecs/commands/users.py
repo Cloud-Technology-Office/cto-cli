@@ -8,7 +8,7 @@ else:
     from typing import Annotated, Optional
 
 import typer
-from rich.prompt import Confirm
+from rich.prompt import Confirm, Prompt
 
 from cto_cli.ecs.api.connector import APIConnector
 from cto_cli.ecs.local.settings import get_current_working_dir_relative_path_to_ecs_repo
@@ -95,7 +95,8 @@ def auth(username: Annotated[str, typer.Option()], action: Annotated[UserAuthOpt
         if Confirm.ask(
             f'Are you sure you want to add [b]{current_path}[/b] as allowed path for user: [b]{username}[/b]'
         ):
-            api_connector.add_auth(username, current_path)
+            mode = Prompt.ask('Choose permission mode', choices=['read', 'read_write'], default='read_write')
+            api_connector.add_auth(username, current_path, mode)
 
     elif action is UserAuthOptions.list:
         api_connector.list_auth(username)
