@@ -37,7 +37,6 @@ def ask_and_store_settings() -> None:
         settings = None
 
     saas_token = None
-    repo_name = None
 
     saas = typer.confirm(
         "If you're using ECS Cloud type Y, if you're using your own on-prem ECS server, type N", abort=False
