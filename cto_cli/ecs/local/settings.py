@@ -88,12 +88,21 @@ def create_repo_dir() -> None:
     get_repo_path().mkdir(parents=True, exist_ok=True)
 
 
-def store_settings(url: str, token: str, saas_token: None | str = None) -> None:
+def store_settings(url: str, token: str, saas_token: None | str = None, repo_name: None | str = None) -> None:
     CTO_DIR.mkdir(parents=True, exist_ok=True)
 
     with open(ECS_SETTINGS_LOCATION, 'w') as f:
         f.write(
-            json.dumps({'token': token, 'url': url, 'saas_token': saas_token, 'ecs_path': str(WORKING_DIR)}, indent=4)
+            json.dumps(
+                {
+                    'token': token,
+                    'url': url,
+                    'saas_token': saas_token,
+                    'ecs_path': str(WORKING_DIR),
+                    'repo_name': repo_name,
+                },
+                indent=4,
+            )
         )
 
 

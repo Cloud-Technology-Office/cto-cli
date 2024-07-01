@@ -37,6 +37,7 @@ def ask_and_store_settings() -> None:
         settings = None
 
     saas_token = None
+    repo_name = None
 
     saas = typer.confirm(
         "If you're using ECS Cloud type Y, if you're using your own on-prem ECS server, type N", abort=False
@@ -88,11 +89,11 @@ def ask_and_store_settings() -> None:
     except ApiTokenError:
         # admin account already exist
         user_token = typer.prompt("What's your User token?", default=settings.token if settings else None)
-        store_settings(api_url, user_token, saas_token)
+        store_settings(api_url, user_token, saas_token, repo_name)
     else:
         # create admin account
         user_token = create_admin_account(api_connector)
-        store_settings(api_url, user_token, saas_token)
+        store_settings(api_url, user_token, saas_token, repo_name)
 
 
 def store_and_validate_settings() -> None:
