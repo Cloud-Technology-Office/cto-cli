@@ -38,7 +38,45 @@ def test_user_create(app):
         ],
     )
     assert result.exit_code == 0
-    assert result.stdout.strip() == json.dumps(server_response)
+    assert result.stdout.strip() == '{\n  "token": "test_token"\n}'
+
+
+@responses.activate
+def test_user_edit(app):
+    responses.add(responses.PATCH, f'{API_URL}/users/test', status=204)
+    result = runner.invoke(
+        app,
+        [
+            'ecs',
+            'users',
+            'edit',
+            '--username',
+            'test',
+            '--given-name',
+            'surname',
+            '--email',
+            'test@email.com',
+        ],
+    )
+    assert result.exit_code == 0
+    assert result.stdout.strip() == 'User has been modified'
+
+
+@responses.activate
+def test_user_delete(app):
+    responses.add(responses.DELETE, f'{API_URL}/users/test', status=204)
+    result = runner.invoke(
+        app,
+        [
+            'ecs',
+            'users',
+            'delete',
+            '--username',
+            'test',
+        ],
+    )
+    assert result.exit_code == 0
+    assert result.stdout.strip() == 'User has been deleted'
 
 
 @responses.activate
@@ -54,11 +92,14 @@ def test_user_list(app):
 def test_user_add_auth(users, app, mocker):
     mocker.patch.object(users, 'get_current_working_dir_relative_path_to_ecs_repo').return_value = PosixPath('/')
     responses.add(responses.POST, f'{API_URL}/users/user/auth', status=204)
-    result = runner.invoke(app, ['ecs', 'users', 'auth', '--username', 'user', '--action', 'add'], input='y')
+    result = runner.invoke(
+        app, ['ecs', 'users', 'auth', '--username', 'user', '--action', 'add'], input='y\nread_write'
+    )
     assert result.exit_code == 0
     assert (
         result.stdout.strip()
-        == 'Are you sure you want to add / as allowed path for user: user [y/n]: Auth has been added'
+        == 'Are you sure you want to add / as allowed path for user: user [y/n]: '
+           'Choose permission mode [read/read_write] (read_write): Auth has been added'
     )
 
 

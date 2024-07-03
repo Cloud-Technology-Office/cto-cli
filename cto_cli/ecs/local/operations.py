@@ -25,7 +25,7 @@ EXCLUDED_COMMIT_LOCATIONS = ['.idea/', '.vscode/']
 
 GIT_CONFLICTS_DETECTED_ERROR_MSG = (
     '[red]There are conflicts that have to be manually solved. To view details run [yellow]git status[/yellow]. '
-    'Once conflicts are solved [yellow]git commit -am "anything"[/yellow] and then [yellow]ecs config push[/yellow] again[/red]'
+    'Once conflicts are solved [yellow]git commit -am "anything"[/yellow] and then [yellow]cto ecs config push[/yellow] again[/red]'
 )
 
 
@@ -86,7 +86,6 @@ def handle_config_update(remote_zip_path: str | Path) -> None:
             zip.extractall(path=get_repo_path())
 
     os.remove(remote_zip_path)
-
 
 def _are_branches_merged() -> bool:
     return (
@@ -152,7 +151,7 @@ def handle_config_push(api_connector: APIConnector, tag: str | None = None) -> O
         print('[yellow]There is nothing to be pushed[/yellow]')
         sys.exit(0)
 
-    FilesHandler.validate_files(modified_files.get_added_or_updated_paths())
+    FilesHandler.validate_files(get_repo_path(), modified_files.get_added_or_updated_paths())
 
     show_modified_local_files(modified_files)
 
