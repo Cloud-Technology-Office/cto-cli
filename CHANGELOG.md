@@ -2,6 +2,22 @@
 
 
 
+## v0.4.0 (2024-07-03)
+
+### Feature
+
+* feat: Add support for multi repos
+* feat: add support for deleting and modifing users
+* feat: add regenerating tokens for users
+* feat: support read/read_write auth for paths ([`9b3c491`](https://github.com/Cloud-Technology-Office/cto-cli/commit/9b3c491386f16cd3eca4194c121a48ff76560fb3))
+
+### Unknown
+
+* Merge pull request #12 from Cloud-Technology-Office/muli_repos
+
+Multi repos support ([`9be1d94`](https://github.com/Cloud-Technology-Office/cto-cli/commit/9be1d94fb0ea3be66d1426eaa5e2cfa01a93972b))
+
+
 ## v0.3.3 (2024-05-30)
 
 ### Fix
