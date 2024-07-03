@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import requests
 from requests import HTTPError, ConnectionError, Timeout
@@ -72,6 +72,7 @@ class APIConnector:
         self._headers = {
             'Authorization': settings.token,
             **({'x-saas-token': settings.saas_token} if settings.saas_token else {}),
+            **({'x-repo-name': settings.repo_name} if settings.repo_name else {}),
         }
         self._url = settings.url
 
@@ -138,6 +139,7 @@ class APIConnector:
         return_as_dict: bool = False,
         read_secrets: bool = False,
         edit_strategies: bool = False,
+        edit_webhooks: bool = False,
     ) -> dict | None:
         response = self._make_request(
             'post',
@@ -150,6 +152,7 @@ class APIConnector:
                 'admin': admin,
                 **({'read_secrets': read_secrets} if admin is False else {}),
                 **({'edit_strategies': edit_strategies} if admin is False else {}),
+                **({'edit_webhooks': edit_webhooks} if admin is False else {}),
             },
             headers=self._headers,
         )
@@ -158,19 +161,64 @@ class APIConnector:
         if return_as_dict:
             return response.json()
         else:
-            print(response.text)
+            print_json(data=response.json())
+
+    def delete_user(self, username: str) -> None:
+        response = self._make_request(
+            'delete',
+            f'users/{username}',
+        )
+        self._handle_response(response)
+        if response.status_code == 204:
+            print('[green]User has been deleted[/green]')
+
+    def edit_user(
+        self,
+        username: str,
+        given_name: str | None = None,
+        family_name: str | None = None,
+        email: str | None = None,
+        admin: bool | None = None,
+        read_secrets: bool | None = None,
+        edit_strategies: bool | None = None,
+        edit_webhooks: bool | None = None,
+    ) -> None:
+        response = self._make_request(
+            'patch',
+            f'users/{username}',
+            json={
+                **({'given_name': given_name} if given_name is not None else {}),
+                **({'family_name': family_name} if family_name is not None else {}),
+                **({'email': email} if email is not None else {}),
+                **({'admin': admin} if admin is not None else {}),
+                **({'read_secrets': read_secrets} if read_secrets is not None else {}),
+                **({'edit_strategies': edit_strategies} if edit_strategies is not None else {}),
+                **({'edit_webhooks': edit_webhooks} if edit_webhooks is not None else {}),
+            },
+            headers=self._headers,
+        )
+        self._handle_response(response)
+
+        if response.status_code == 204:
+            print('[green]User has been modified[/green]')
 
     def list_users(self):
         response = self._make_request('get', 'users')
         self._handle_response(response)
         print_json(data=response.json())
 
-    def add_auth(self, username: str, allowed_path: str | Path) -> None:
+    def regenerate_user_token(self, username: str):
+        response = self._make_request('post', f'users/{username}/token/regenerate')
+        self._handle_response(response)
+        print_json(data=response.json())
+
+    def add_auth(self, username: str, allowed_path: str | Path, mode: Literal['read', 'read_write'] = None) -> None:
         response = self._make_request(
             'post',
             f'users/{username}/auth',
             json={
                 'allowed_path': str(allowed_path),
+                **({'mode': mode} if mode else {}),
             },
         )
         self._handle_response(response)

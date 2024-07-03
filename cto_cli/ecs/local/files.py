@@ -177,10 +177,11 @@ class FilesHandler:
                     zip_file.extractall(path=extract_path)
 
     @staticmethod
-    def validate_files(file_paths: list[str]):
+    def validate_files(repo_path: Path, file_paths: list[str]):
         invalid_files = []
 
         for file_path in file_paths:
+            file_path = os.path.join(repo_path, file_path)
             for extension_to_validate in EXTENSIONS_TO_VALIDATE:
                 if file_path.endswith(extension_to_validate):
                     with open(file_path) as f:

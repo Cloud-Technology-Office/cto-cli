@@ -104,7 +104,7 @@ def decrypt(path: Annotated[str, typer.Option()]) -> None:
 
 @app.command(name='generate-schema')
 def generate_schema(
-    path: Annotated[str, typer.Option()], strategy_name: Annotated[str, typer.Option()], write: bool = False
+    path: Annotated[str, typer.Option()], strategy_name: Annotated[str, typer.Option()] = None, write: bool = False
 ) -> None:
     with Progress(
         SpinnerColumn(),
