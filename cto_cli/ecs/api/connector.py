@@ -282,13 +282,18 @@ class APIConnector:
         self,
         path: str | Path,
         strategy_name: str | None = None,
+        config_vars: list[tuple[str, str]] | None = None,
         recursive: bool = False,
         show_secrets: bool = False,
         config_id: str | None = None,
         detect_drift: bool = False,
         format: str | None = None,
         filter: str | None = None,
+        debug: bool | None = None,
     ):
+
+        config_vars = {config_var[0]: config_var[1] for config_var in config_vars if config_vars }
+
         response = self._make_request(
             'post',
             'config/build',
@@ -297,10 +302,12 @@ class APIConnector:
                 'recursive': recursive,
                 **({'show_secrets': show_secrets} if show_secrets else {}),
                 **({'strategy_name': strategy_name} if strategy_name else {}),
+                **({'config_vars': config_vars} if config_vars else {}),
                 **({'format': format} if format else {}),
                 **({'filter': filter} if filter else {}),
                 **({'config_id': config_id} if config_id else {}),
                 **({'detect_drift': detect_drift} if detect_drift else {}),
+                **({'debug': debug} if debug else {}),
             },
         )
 
