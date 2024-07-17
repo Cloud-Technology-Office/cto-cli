@@ -189,6 +189,7 @@ class FilesHandler:
                             content = yaml.safe_load(f)
                         except YAMLError:
                             invalid_files.append(file_path)
+                            continue
 
                         if not isinstance(content, (dict, list)):
                             print_error(

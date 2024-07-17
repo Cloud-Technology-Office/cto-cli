@@ -1,9 +1,11 @@
 import sys
 
+import click
+
 if sys.version_info < (3, 11):
-    from typing_extensions import Annotated
+    from typing_extensions import Annotated, List
 else:
-    from typing import Annotated
+    from typing import Annotated, List
 import typer
 from rich import print
 
@@ -75,12 +77,14 @@ def validate_strategy_name(value: str):
 def build(
     path: Annotated[str, typer.Option()],
     strategy_name: Annotated[str, typer.Option()] = None,
+    config_var: Annotated[List[click.Tuple], typer.Option(click_type=click.Tuple([str, str]))] = None,
     format: Annotated[str, typer.Option()] = None,
     filter: Annotated[str, typer.Option(help='filter result using JMESPath')] = None,
     config_id: Annotated[str, typer.Option()] = None,
     detect_drift: bool = False,
     recursive: bool = False,
     show_secrets: bool = False,
+    debug: bool = False,
 ) -> None:
     if strategy_name:
         validate_strategy_name(strategy_name)
@@ -88,12 +92,14 @@ def build(
     APIConnector().build_config(
         path=path,
         strategy_name=strategy_name,
+        config_vars=config_var,
         format=format,
         filter=filter,
         recursive=recursive,
         show_secrets=show_secrets,
         config_id=config_id,
         detect_drift=detect_drift,
+        debug=debug,
     )
 
 
