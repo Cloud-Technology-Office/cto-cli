@@ -2,6 +2,18 @@
 
 
 
+## v0.4.1 (2024-07-17)
+
+### Fix
+
+* fix: don&#39;t fail on the first invalid yaml
+* fix: add missing `debug` and pass `--config-var` on strategy build ([`2a3bc60`](https://github.com/Cloud-Technology-Office/cto-cli/commit/2a3bc609c50f8b57b31af72495f10350bc532eda))
+
+### Unknown
+
+* Merge pull request #13 from Cloud-Technology-Office/debug ([`94d12d7`](https://github.com/Cloud-Technology-Office/cto-cli/commit/94d12d7d27730c778fa7be6c6359373dff3f8772))
+
+
 ## v0.4.0 (2024-07-03)
 
 ### Feature
